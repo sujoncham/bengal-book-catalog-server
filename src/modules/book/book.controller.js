@@ -1,3 +1,4 @@
+const User = require("../user/user.model");
 const Book = require("./book.model");
 
 exports.getAllBook = async (req, res, next) => {
@@ -19,20 +20,29 @@ exports.getAllBook = async (req, res, next) => {
 };
 
 exports.addNewBook = async (req, res, next) => {
-  // console.log(req.body)
+  console.log(req.body);
+  console.log(req.file);
   const { filename } = req.file;
-  const { title, description, price, status, author, published, genre, user } =
-    req.body;
+  const {
+    title,
+    description,
+    price,
+    status,
+    author,
+    published,
+    genre,
+    userId,
+  } = req.body;
 
-  let existUser;
-  try {
-    existUser = await User.findById(user);
-  } catch (error) {
-    return console.log(error);
-  }
-  if (!existUser) {
-    return res.status(400).json({ message: "user not found" });
-  }
+  // let existUser;
+  // try {
+  //   existUser = await User.findById(userId);
+  // } catch (error) {
+  //   return console.log(error);
+  // }
+  // if (!existUser) {
+  //   return res.status(400).json({ message: "user not found" });
+  // }
 
   const newBook = new Book({
     title,
@@ -42,17 +52,18 @@ exports.addNewBook = async (req, res, next) => {
     author,
     published,
     genre,
-    user,
+    userId,
     image: filename,
   });
 
   try {
-    const session = await mongoose.startSession();
-    session.startTransaction();
-    await newBook.save({ session });
-    existUser.Book.push(newBook);
-    await existUser.save({ session });
-    await session.commitTransaction();
+    // const session = await mongoose.startSession();
+    // session.startTransaction();
+    await newBook.save();
+    // await newBook.save({ session });
+    // existUser.Book.push(newBook);
+    // await existUser.save({ session });
+    // await session.commitTransaction();
   } catch (error) {
     return res.send({
       status: "failed",
@@ -90,12 +101,27 @@ exports.updateBookById = async (req, res, next) => {
 exports.getBookById = async (req, res, next) => {
   try {
     const bookId = req.params.id;
-    const book = await book.findById(bookId);
+    const book = await Book.findById(bookId);
 
     return res.status(200).json({
       status: "success",
       message: "get by id successfully",
       data: book,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+exports.getCommentById = async (req, res, next) => {
+  try {
+    const commentId = req.params.id;
+    const comment = await Book.findById(commentId);
+
+    return res.status(200).json({
+      status: "success",
+      message: "get by id successfully",
+      blog: comment,
     });
   } catch (error) {
     console.log(error);
