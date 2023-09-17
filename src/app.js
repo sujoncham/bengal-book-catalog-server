@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const bookRouter = require("./modules/book/book.route");
 const routerUser = require("./modules/user/user.route");
+const checkoutRouter = require("./modules/checkout.js/checkout.route");
 require("dotenv").config();
 
 const app = express();
@@ -12,6 +13,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("./uploads"));
 
 app.use("/api/v1/books", bookRouter);
+app.use("/api/v1/checkout", checkoutRouter);
 app.use("/api/v1/users", routerUser);
 
 app.get("/", (req, res) => {
