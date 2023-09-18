@@ -37,7 +37,7 @@ const checkoutSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    DeliCharge: {
+    deliCharge: {
       type: Number,
       required: true,
     },
